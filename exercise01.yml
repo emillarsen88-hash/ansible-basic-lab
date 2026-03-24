@@ -1,0 +1,43 @@
+- name: Install httpd with task-level become
+  hosts: copenhagen,stockholm
+  
+  
+
+  tasks:
+    - name: Install httpd package
+      ansible.builtin.package:
+        name: httpd
+        state: present
+      become: true
+      when: ansible_facts['os_family'] == "RedHat"
+
+    - name: Verify httpd is installed
+      ansible.builtin.command:
+        cmd: rpm -q httpd
+      register: httpd_check
+      changed_when: false
+      when: ansible_facts['os_family'] == "RedHat"
+
+    - name: Display httpd version
+      ansible.builtin.debug:
+        var: httpd_check.stdout
+      when: ansible_facts['os_family'] == "RedHat"
+
+    - name: Install apache2
+      ansible.builtin.package:
+        name: apache2
+        state: present
+      become: true
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Verify apache2 is installed
+      ansible.builtin.command:
+        cmd: dpkg -l apache2
+      register: apache2_check
+      changed_when: false
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Display apache2 version
+      ansible.builtin.debug:
+        var: apache2_check.stdout
+      when: ansible_facts['os_family'] == "Debian"

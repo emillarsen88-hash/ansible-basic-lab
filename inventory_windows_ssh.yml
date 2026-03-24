@@ -1,0 +1,11 @@
+---
+all:
+  children:
+    windows:
+      hosts:
+        server5:
+      vars:
+        ansible_connection: ssh
+        ansible_shell_type: powershell
+        ansible_user: work10
+        ansible_password: ~/.ssh/windows_rsa
